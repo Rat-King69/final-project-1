@@ -1,0 +1,43 @@
+import maya.cmds as cmds
+
+
+
+def duplicate_chain():
+    sel = cmds.ls(sl=True)
+    # duplicate entire joint chain
+    fk_chain = cmds.duplicate(sel, renameChildren=True)
+    for jnt in fk_chain:
+        # rename each joint to FK version
+        cmds.rename(jnt, jnt.replace('_JNT', '_FK_JNT'))
+
+
+    sel = cmds.ls(sl=True)
+    # duplicate entire joint chain
+    ik_chain = cmds.duplicate(sel, renameChildren=True)
+    for jnt in ik_chain:
+        # rename each joint to IK version
+        cmds.rename(jnt, jnt.replace('_JNT', '_IK_JNT'))
+
+
+def create_fk_controls():
+    sel = cmds.ls(sl=True)
+    fk_joints = [jnt for jnt in sel if '_FK_JNT' in jnt]
+
+    for jnt in fk_joints:
+        # duplicate a jnt rename to zero
+        zero = cmds.duplicate(
+            jnt,
+            name=jnt.replace('_FK_JNT', '_FK_ZERO'),
+            parentOnly=True
+        )[0]
+        # rename the original joint to con
+        jnt = cmds.rename(jnt, jnt.replace('_FK_JNT', '_FK_CON'))
+        cmds.parent(jnt, zero)
+        # add a shape to con
+        circle = cmds.circle(normal=[1, 0, 0], ch=False)[0]
+        circle_shape = cmds.listRelatives(circle, shapes=True)
+        cmds.parent(circle_shape, jnt, s=True, add=True)
+        cmds.delete(circle)
+
+
+if __name__ == "__main__":
