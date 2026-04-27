@@ -17,8 +17,6 @@ def duplicate_chain():
 
 def create_fk_controls():
     sel = cmds.ls(sl=True)
-    fk_joints = [jnt for jnt in sel if '_FK_JNT' in jnt]
-
     for jnt in fk_joints:
         # duplicate a jnt rename to zero
         zero = cmds.duplicate(
@@ -34,6 +32,46 @@ def create_fk_controls():
         circle_shape = cmds.listRelatives(circle, shapes=True)
         cmds.parent(circle_shape, jnt, s=True, add=True)
         cmds.delete(circle)
+
+
+
+
+def create_ik_arm():
+    sel = cmds.ls(sl=True, type='joint')
+    ik_joints = [jnt for jnt in sel if 'IK_JNT' in jnt]
+
+    # get start and end joint
+    start_jnt = ik_joints[0]
+    end_jnt = ik_joints[-1]
+
+    # create ik handle
+    ik_handle, ik_effector = cmds.ikHandle(
+        name='L_arm_IKH',
+        startJoint=start_jnt,
+        endEffector=end_jnt,
+        solver='ikRPsolver'
+    )
+
+    # create nurbs circle
+    ik_ctrl = cmds.circle(name=end_jnt.replace('_IK_JNT', '_IK_CON'), normal=[1, 0, 0], radius=1, constructionHistory=False)[0]
+
+    # group the nurbs circle
+    ik_ctrl_grp = cmds.group(ik_ctrl, name=end_jnt.replace('_IK_JNT', '_GRP'))
+
+    # parent constraint with offset off to snap group to end joint
+    constraint = cmds.parentConstraint(end_jnt, ik_ctrl_grp, maintainOffset=False)
+
+    # delete the constraint
+    cmds.delete(constraint)
+
+    # parent ik handle under the wrist control
+    cmds.parent(ik_handle, ik_ctrl)
+
+
+
+duplicate_chain()
+create_ik_arm()
+create_fk_controls()
 
 
 if __name__ == "__main__":
