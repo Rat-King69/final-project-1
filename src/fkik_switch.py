@@ -105,6 +105,13 @@ def create_fk_ik_switch():
         cmds.connectAttr(blend + '.output', jnt + '.rotate')
         cmds.connectAttr(reverse + '.outputX', blend + '.blender')
 
+        scale_blend = cmds.shadingNode('blendColors', name=short.replace('_JNT', '_SCALE_BC'), asUtility=True)
+
+        cmds.connectAttr(fk_con + '.scale', scale_blend + '.color1')
+        cmds.connectAttr(ik_jnt + '.scale', scale_blend + '.color2')
+        cmds.connectAttr(scale_blend + '.output', jnt + '.scale')
+        cmds.connectAttr(reverse + '.outputX', scale_blend + '.blender')
+
 def ik_stretch_setup(ikh):
     joints = cmds.ikHandle(ikh, q=True, jointList=True)
     end_eff = cmds.ikHandle(ikh, q=True, endEffector=True)
