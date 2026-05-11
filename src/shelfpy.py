@@ -1,4 +1,3 @@
-
 # create Scripts shelf if it does not exist
 if not cmds.shelfLayout('Scripts', exists=True):
     mel.eval('addNewShelfTab "Scripts"')
@@ -11,5 +10,11 @@ cmds.shelfButton(
     imageOverlayLabel='FKIK',
     image='commandButton.png',
     command='''
-import sys
+import fkik_switch
 import importlib
+
+importlib.reload(fkik_switch)
+
+fkik_switch.main()
+'''
+)
