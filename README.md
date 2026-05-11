@@ -1,10 +1,10 @@
 # The switch of all times
 
 ## Repository
-<Link https://github.com/Rat-King69/final-project-1>
+https://github.com/Rat-King69/final-project-1
 
 # final-project-1 video
-<Link https://youtu.be/py1ky-Tpz_Y>
+https://youtu.be/py1ky-Tpz_Y
 
 # what it is
 this is an Fkik swithc where the user with properely named joins with _JNT at the end can build out an auto fkik arm with stretch. which is really usefull in the rigging world so you dont have to spend up to an hour rigging and arm if it decides to break with this it never does. it has two files the main fkik switch which should be added to the maya scripts folder and the shelfpy the shelfpy is solid code that should be run in the maya pyton code menu or tab and then it will add the fkik swtich in the maya scripts folder to maya on a custom shelf
